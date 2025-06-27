@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
@@ -19,6 +19,18 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+
+      if (token) {
+        navigation.replace('Main');
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -31,13 +43,13 @@ const LoginScreen = () => {
         'http://192.168.54.29:8000/api/v1/login',
         user,
       );
-      const token = res.data.token;
+      const token = res.data?.token;
 
-      const jsonValue = JSON.stringify(token);
-      await AsyncStorage.setItem('authToken', jsonValue);
+      // const jsonValue = JSON.stringify(token);
+      await AsyncStorage.setItem('authToken', token);
 
-      const data = AsyncStorage.getItem('authToken');
-      console.log('token data', data);
+      // const data = AsyncStorage.getItem('authToken');
+      // console.log('token data', data);
 
       Alert.alert('Login successfulll....');
       console.log('Login successfull...');

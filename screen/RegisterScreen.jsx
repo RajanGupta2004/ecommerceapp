@@ -1,0 +1,186 @@
+import {
+  Image,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Platform,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+} from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+
+const RegisterScreen = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigation = useNavigation();
+
+  const handleRegister = async () => {
+    try {
+      debugger;
+      const user = {
+        name,
+        email,
+        password,
+      };
+
+      const res = await axios.post(
+        'http://192.168.81.29:8000/api/v1/register',
+        user,
+      );
+      setName('');
+      setEmail('');
+      setPassword('');
+
+      console.log('Registration done successfully');
+      Alert.alert('Registration successfully....');
+    } catch (error) {
+      console.log('Error while regidtration', error);
+      Alert.alert('Error occur while usr Registration');
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
+        <Image
+          style={styles.logo}
+          source={{
+            uri: 'https://assets.stickpng.com/thumbs/6160562276000b00045a7d97.png',
+          }}
+        />
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
+          style={styles.innerContainer}
+        >
+          <Text style={styles.title}>Create your account</Text>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Name</Text>
+            <TextInput
+              value={name}
+              onChangeText={text => setName(text)}
+              style={styles.input}
+              placeholder="Enter your name"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              value={email}
+              onChangeText={text => setEmail(text)}
+              style={styles.input}
+              placeholder="Enter your email"
+              keyboardType="email-address"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Password</Text>
+            <TextInput
+              value={password}
+              onChangeText={text => setPassword(text)}
+              style={styles.input}
+              placeholder="Enter your password"
+              secureTextEntry
+            />
+          </View>
+
+          <View style={styles.fotgotContainer}>
+            <Text>keep me login</Text>
+            <Text style={{ color: 'blue' }}>Forgot Password</Text>
+          </View>
+
+          <TouchableOpacity onPress={handleRegister} style={styles.button}>
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
+
+          <Text
+            onPress={() => navigation.navigate('Login')}
+            style={styles.footerText}
+          >
+            Already have an account?{' '}
+            <Text style={styles.signupText}>Login</Text>
+          </Text>
+        </KeyboardAvoidingView>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+export default RegisterScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  logo: {
+    width: 160,
+    height: 100,
+    resizeMode: 'contain',
+    marginTop: 50,
+  },
+  innerContainer: {
+    width: '85%',
+    marginTop: 30,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 40,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 6,
+    fontWeight: '500',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 16,
+    backgroundColor: '#f9f9f9',
+  },
+  fotgotContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 14,
+    borderRadius: 8,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  footerText: {
+    marginTop: 25,
+    fontSize: 14,
+    textAlign: 'center',
+    color: '#333',
+  },
+  signupText: {
+    color: '#007AFF',
+    fontWeight: '600',
+  },
+});

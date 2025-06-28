@@ -40,7 +40,7 @@ const LoginScreen = () => {
       };
 
       const res = await axios.post(
-        'http://192.168.54.29:8000/api/v1/login',
+        'http://192.168.12.29:8000/api/v1/login',
         user,
       );
       const token = res.data?.token;

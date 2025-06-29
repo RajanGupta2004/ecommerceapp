@@ -15,6 +15,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { Dimensions } from 'react-native';
 import axios from 'axios';
 import ProductsItem from '../components/ProductsItem';
+import { useNavigation } from '@react-navigation/native';
 // Custom dropdown - no external library needed
 
 const HomeScreen = () => {
@@ -200,6 +201,8 @@ const HomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCategoryLabel, setSelectedCategoryLabel] =
     useState('All Categories');
+
+  const navigation = useNavigation();
 
   const categories = [
     { label: 'All Categories', value: 'all' },
@@ -388,6 +391,18 @@ const HomeScreen = () => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {offers.map((item, index) => (
             <Pressable
+              onPress={() =>
+                navigation.navigate('Info', {
+                  id: item?.id,
+                  title: item?.title,
+                  price: item?.price,
+                  carouselImages: item.carouselImages,
+                  color: item?.color,
+                  size: item?.size,
+                  oldPrice: item.oldPrice,
+                  item: item,
+                })
+              }
               key={item.id}
               style={{
                 marginVertical: 10,

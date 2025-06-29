@@ -7,11 +7,15 @@
 
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import StackNavigation from './navigation/StackNavigation';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 function App() {
   return (
     <>
-      <StackNavigation />
+      <Provider store={store}>
+        <StackNavigation />
+      </Provider>
     </>
   );
 }

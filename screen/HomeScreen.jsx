@@ -16,6 +16,7 @@ import { Dimensions } from 'react-native';
 import axios from 'axios';
 import ProductsItem from '../components/ProductsItem';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 // Custom dropdown - no external library needed
 
 const HomeScreen = () => {
@@ -203,6 +204,9 @@ const HomeScreen = () => {
     useState('All Categories');
 
   const navigation = useNavigation();
+
+  const cart = useSelector(state => state.cart.cart);
+  console.log('Cart', cart);
 
   const categories = [
     { label: 'All Categories', value: 'all' },

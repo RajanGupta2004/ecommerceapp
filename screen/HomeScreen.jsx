@@ -205,8 +205,8 @@ const HomeScreen = () => {
 
   const navigation = useNavigation();
 
-  const cart = useSelector(state => state.cart.cart);
-  console.log('Cart', cart);
+  // const cart = useSelector(state => state.cart.cart);
+  // console.log('Cart', cart);
 
   const categories = [
     { label: 'All Categories', value: 'all' },
@@ -368,6 +368,18 @@ const HomeScreen = () => {
         >
           {deals.map((item, index) => (
             <Pressable
+              onPress={() =>
+                navigation.navigate('Info', {
+                  id: item?.id,
+                  title: item?.title,
+                  price: item?.price,
+                  carouselImages: item.carouselImages,
+                  color: item?.color,
+                  size: item?.size,
+                  oldPrice: item.oldPrice,
+                  item: item,
+                })
+              }
               key={item.id}
               style={{ alignItems: 'center', justifyContent: 'center' }}
             >

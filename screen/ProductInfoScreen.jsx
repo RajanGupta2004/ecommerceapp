@@ -8,17 +8,33 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { useRoute } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../redux/cartReducer';
 
 const ProductInfoScreen = () => {
   const route = useRoute();
+  const [addedToCart, setAddedToCart] = useState(false);
   const { width } = Dimensions.get('window');
   const height = (width * 100) / 100;
+
+  const dispatch = useDispatch();
+
+  const addToCartProducts = item => {
+    setAddedToCart(true);
+    dispatch(addToCart(item));
+    setTimeout(() => {
+      setAddedToCart(false);
+    }, 6000);
+  };
+
+  const cart = useSelector(state => state.cart.cart);
+  console.log('Cart', cart);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <ScrollView>
@@ -57,7 +73,11 @@ const ProductInfoScreen = () => {
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {route.params?.carouselImages.map(item => (
-            <ImageBackground style={{ width, height }} source={{ uri: item }}>
+            <ImageBackground
+              key={item.id}
+              style={{ width, height }}
+              source={{ uri: item }}
+            >
               <View
                 style={{
                   flexDirection: 'row',
@@ -209,6 +229,7 @@ const ProductInfoScreen = () => {
           </Text>
 
           <Pressable
+            onPress={() => addToCartProducts(route?.params?.item)}
             style={{
               paddingVertical: 8,
               borderRadius: 20,
@@ -217,9 +238,15 @@ const ProductInfoScreen = () => {
               marginVertical: 10,
             }}
           >
-            <Text style={{ fontWeight: 'bold', fontSize: 17 }}>
-              Add to Cart
-            </Text>
+            {addedToCart ? (
+              <Text style={{ fontWeight: 'bold', fontSize: 17 }}>
+                Added To Cart
+              </Text>
+            ) : (
+              <Text style={{ fontWeight: 'bold', fontSize: 17 }}>
+                Add to Cart
+              </Text>
+            )}
           </Pressable>
 
           <Pressable

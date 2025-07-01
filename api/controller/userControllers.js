@@ -91,3 +91,48 @@ export const Login = async (req, res) => {
       .json({ message: 'Internal server error ', error: error });
   }
 };
+
+export const AddAddress = async (req, res) => {
+  try {
+    const { userId, address } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'Userid is required' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User Not found' });
+    }
+
+    user.address.push(address);
+
+    await user.save();
+    return res.status(201).json({ message: 'Address created successfully...' });
+  } catch (error) {
+    console.log('Error in Add Arddress:', error);
+    return res
+      .status(500)
+      .json({ message: 'Internal server error ', error: error });
+  }
+};
+
+export const getAddress = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User Not found' });
+    }
+
+    const address = user.address;
+
+    return res.status(200).json({ address, message: 'Success' });
+  } catch (error) {
+    console.log('Error in get Address', error);
+    return res
+      .status(500)
+      .json({ message: 'Internal server error ', error: error });
+  }
+};

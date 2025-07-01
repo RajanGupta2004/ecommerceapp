@@ -1,11 +1,35 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { UserType } from '../UserContext';
 
 const AddAddressScreen = () => {
   const navigation = useNavigation();
+  const [addresses, setAddresses] = useState([]);
+
+  const { userId } = useContext(UserType);
+
+  console.log('Address userId', userId);
+  console.log('addresses', addresses);
+
+  useEffect(() => {
+    const fetchUserAddress = async () => {
+      try {
+        const res = await axios.get(
+          `http://192.168.12.29:8000/api/v1/address/${userId}`,
+        );
+        console.log('Address', res.data?.address);
+        setAddresses(res.data?.address);
+      } catch (error) {
+        console.log('Error to get Address', error);
+      }
+    };
+
+    fetchUserAddress();
+  }, []);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <ScrollView showsVerticalScrollIndicator={false}>

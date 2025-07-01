@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,6 +19,10 @@ import ProductsItem from '../components/ProductsItem';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
+import { UserType } from '../UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from 'jwt-decode';
+
 // Custom dropdown - no external library needed
 
 const HomeScreen = () => {
@@ -201,6 +205,7 @@ const HomeScreen = () => {
   // State for products and dropdown
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [addresses, setAddresses] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCategoryLabel, setSelectedCategoryLabel] =
@@ -209,8 +214,10 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
+  const { userId, setUserId } = useContext(UserType);
+
   // const cart = useSelector(state => state.cart.cart);
-  // console.log('Cart', cart);
+  console.log('userId from Home', userId);
 
   const categories = [
     { label: 'All Categories', value: 'all' },
@@ -246,6 +253,37 @@ const HomeScreen = () => {
       setFilteredProducts(filtered);
     }
   }, [selectedCategory, products]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        if (userId) {
+          const res = await axios.get(
+            `http://192.168.12.29:8000/api/v1/address/${userId}`,
+          );
+          console.log('Address', res.data?.address);
+          setAddresses(res.data?.address);
+        }
+      } catch (error) {
+        console.log('Error to fetch Address', error);
+      }
+    };
+
+    fetchAddress();
+  }, [userId, modalVisible]);
+
+  console.log('addresses from Home ', addresses);
 
   const handleCategorySelect = category => {
     setSelectedCategory(category.value);

@@ -1,4 +1,5 @@
 import {
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -6,10 +7,70 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
+import { UserType } from '../UserContext';
+import { useNavigation } from '@react-navigation/native';
 
 const AddressScreen = () => {
+  const [name, setName] = useState();
+  const [mobileNo, setMobileNo] = useState();
+  const [houseNo, setHouseNo] = useState();
+  const [street, setStreet] = useState();
+  const [landMark, setLandMark] = useState();
+  const [pincode, setPincode] = useState();
+  const navigation = useNavigation();
+  const { userId, setUserId } = useContext(UserType);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+      const decoded = jwtDecode(token);
+      setUserId(decoded.userId);
+      console.log(decoded);
+    };
+
+    fetchUserId();
+  }, []);
+
+  console.log('userId', userId);
+  const handleAddAddress = async () => {
+    try {
+      Alert.alert('Try to login');
+      const address = {
+        name,
+        mobileNo,
+        houseNo,
+        street,
+        landMark,
+        pincode,
+      };
+      const res = await axios.post('http://192.168.12.29:8000/api/v1/address', {
+        userId,
+        address,
+      });
+
+      setName('');
+      setMobileNo('');
+      setHouseNo('');
+      setStreet('');
+      setLandMark('');
+      setPincode('');
+
+      setTimeout(() => {
+        navigation.goBack();
+      }, 1000);
+
+      console.log('res', res);
+      Alert.alert('Address added successfully...');
+    } catch (error) {
+      console.log('Error to add address', error);
+      Alert.alert('Error occur while add address');
+    }
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <ScrollView>
@@ -40,6 +101,8 @@ const AddressScreen = () => {
           </Text>
 
           <TextInput
+            value={name}
+            onChangeText={text => setName(text)}
             placeholder="Enter your name..."
             placeholderTextColor={'black'}
             style={{
@@ -55,6 +118,8 @@ const AddressScreen = () => {
           <Text style={{ fontWeight: 'bold', fontSize: 17 }}>Mobile No</Text>
 
           <TextInput
+            value={mobileNo}
+            onChangeText={text => setMobileNo(text)}
             placeholder="Mobile No..."
             placeholderTextColor={'black'}
             style={{
@@ -73,6 +138,8 @@ const AddressScreen = () => {
           </Text>
 
           <TextInput
+            value={houseNo}
+            onChangeText={text => setHouseNo(text)}
             placeholder=""
             placeholderTextColor={'black'}
             style={{
@@ -91,6 +158,8 @@ const AddressScreen = () => {
           </Text>
 
           <TextInput
+            value={street}
+            onChangeText={text => setStreet(text)}
             placeholder=""
             placeholderTextColor={'black'}
             style={{
@@ -107,6 +176,8 @@ const AddressScreen = () => {
           <Text style={{ fontWeight: 'bold', fontSize: 17 }}>LandMark</Text>
 
           <TextInput
+            value={landMark}
+            onChangeText={text => setLandMark(text)}
             placeholder="eg: near Applo hospital..."
             placeholderTextColor={'black'}
             style={{
@@ -123,6 +194,8 @@ const AddressScreen = () => {
           <Text style={{ fontWeight: 'bold', fontSize: 17 }}>Pincode</Text>
 
           <TextInput
+            value={pincode}
+            onChangeText={text => setPincode(text)}
             placeholder="Enter your pincode..."
             placeholderTextColor={'black'}
             style={{
@@ -136,6 +209,7 @@ const AddressScreen = () => {
         </View>
 
         <Pressable
+          onPress={handleAddAddress}
           style={{
             padding: 19,
             backgroundColor: 'orange',

@@ -11,6 +11,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ProfileScreen from '../screen/ProfileScreen';
 import ProductInfoScreen from '../screen/ProductInfoScreen';
+import AddAddressScreen from '../screen/AddAddressScreen';
+import AddressScreen from '../screen/AddressScreen';
 
 const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -89,6 +91,16 @@ const StackNavigation = () => {
         <Stack.Screen
           name="Info"
           component={ProductInfoScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Address"
+          component={AddAddressScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Add"
+          component={AddressScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

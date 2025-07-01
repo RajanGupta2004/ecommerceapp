@@ -604,6 +604,51 @@ const HomeScreen = () => {
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {/* /show added address  */}
 
+            {addresses?.map((item, index) => (
+              <Pressable
+                key={index}
+                style={{
+                  borderWidth: 0.6,
+                  borderColor: 'gray',
+                  padding: 10,
+                  borderRadius: 10,
+                  marginVertical: 10,
+                  marginHorizontal: 10,
+                }}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={{ fontWeight: '500', fontSize: 18 }}>
+                    {item?.name}
+                  </Text>
+                  <Entypo
+                    style={{ paddingLeft: 10 }}
+                    name="location-pin"
+                    size={30}
+                    color={'red'}
+                  />
+                </View>
+
+                <Text style={{ fontSize: 15 }}>
+                  #{item?.houseNo} , {item?.landMark}
+                </Text>
+
+                <Text style={{ fontSize: 15, color: '#181818' }}>
+                  {item?.street}
+                </Text>
+
+                <Text style={{ fontSize: 15, color: '#181818' }}>
+                  India, Bangalore
+                </Text>
+
+                <Text style={{ fontSize: 15, color: '#181818' }}>
+                  phone No : {item?.mobileNo}
+                </Text>
+
+                <Text style={{ fontSize: 15, color: '#181818' }}>
+                  Pincode No : {item?.pinCode}
+                </Text>
+              </Pressable>
+            ))}
             <Pressable
               onPress={() => {
                 setModalVisible(false), navigation.navigate('Address');
@@ -732,7 +777,7 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   modalContent: {
-    height: 400,
+    // height: 400,
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

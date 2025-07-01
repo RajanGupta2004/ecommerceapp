@@ -21,7 +21,7 @@ const AddressScreen = () => {
   const [houseNo, setHouseNo] = useState();
   const [street, setStreet] = useState();
   const [landMark, setLandMark] = useState();
-  const [pincode, setPincode] = useState();
+  const [postalCode, setpostalCode] = useState();
   const navigation = useNavigation();
   const { userId, setUserId } = useContext(UserType);
 
@@ -46,7 +46,7 @@ const AddressScreen = () => {
         houseNo,
         street,
         landMark,
-        pincode,
+        postalCode,
       };
       const res = await axios.post('http://192.168.12.29:8000/api/v1/address', {
         userId,
@@ -194,8 +194,8 @@ const AddressScreen = () => {
           <Text style={{ fontWeight: 'bold', fontSize: 17 }}>Pincode</Text>
 
           <TextInput
-            value={pincode}
-            onChangeText={text => setPincode(text)}
+            value={postalCode}
+            onChangeText={text => setpostalCode(text)}
             placeholder="Enter your pincode..."
             placeholderTextColor={'black'}
             style={{

@@ -1,4 +1,11 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { UserType } from '../UserContext';
@@ -6,6 +13,10 @@ import axios from 'axios';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { cleanCart } from '../redux/cartReducer';
 
 const ConfirmnationScreen = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -14,13 +25,44 @@ const ConfirmnationScreen = () => {
   const [options, setOptions] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState('');
   const { userId } = useContext(UserType);
+  const cart = useSelector(state => state.cart.cart);
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const total = cart
+    ?.map(item => item.price * item.quantity)
+    .reduce((curr, prev) => curr + prev, 0);
   const steps = [
     { title: 'Address', content: 'Address Form' },
     { title: 'Delivery', content: 'Delivery Options' },
     { title: 'Payment', content: 'Payment Details' },
     { title: 'Place Order', content: 'Order Summary' },
   ];
+  const handlePlaceOrder = async () => {
+    try {
+      Alert.alert('Button clicked');
+      const data = {
+        userId,
+        shippingAddress: selectedAddress,
+        paymentMethod: selectedOptions,
+        totalPrice: total,
+        cartItem: cart,
+      };
 
+      const res = await axios.post(
+        'http://192.168.224.29:8000/api/v1/order',
+        data,
+      );
+
+      if (res.status == 200) {
+        navigation.navigate('Order');
+        dispatch(cleanCart());
+      } else {
+        console.log('Error while creating order');
+      }
+    } catch (error) {
+      console.log('Error to place order');
+    }
+  };
   useEffect(() => {
     const fetchUserAddress = async () => {
       try {
@@ -40,7 +82,7 @@ const ConfirmnationScreen = () => {
   console.log('Confirm Address', addresses);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
         <View style={{ flex: 1, paddingHorizontal: 20, paddingVertical: 20 }}>
           <View
@@ -383,7 +425,123 @@ const ConfirmnationScreen = () => {
 
         {currentStep == 3 && (
           <View style={{ marginHorizontal: 20 }}>
-            <Text>Payment options</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Order Now</Text>
+            <View>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: 10,
+                  borderWidth: 1,
+                  borderColor: '#E0E0E0',
+                  marginVertical: 10,
+                  borderRadius: 6,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <View>
+                  <Text style={{ fontWeight: 'bold', fontSize: 19 }}>
+                    Save 5% and never run out
+                  </Text>
+                  <Text style={{ color: 'gray' }}>Turn on auto deliver </Text>
+                </View>
+                <MaterialIcons name="keyboard-arrow-right" size={30} />
+              </View>
+
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: 10,
+                  borderWidth: 1,
+                  borderColor: '#E0E0E0',
+                  marginVertical: 10,
+                  borderRadius: 6,
+                }}
+              >
+                <Text>Shoping to {selectedAddress.name}</Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Text>Items</Text>
+                  <Text> ₹ {total}</Text>
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginVertical: 8,
+                  }}
+                >
+                  <Text>Delivery</Text>
+                  <Text> ₹ 0</Text>
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginVertical: 8,
+                  }}
+                >
+                  <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+                    Order Total
+                  </Text>
+                  <Text
+                    style={{ fontSize: 22, fontWeight: 'bold', color: 'red' }}
+                  >
+                    ₹ {total}
+                  </Text>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: 10,
+                  borderWidth: 1,
+                  borderColor: '#E0E0E0',
+                  marginVertical: 10,
+                  borderRadius: 6,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <View>
+                  <Text>Paywith</Text>
+                  <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                    Pay on delivery (Cash){' '}
+                  </Text>
+                </View>
+              </View>
+
+              <Pressable
+                onPress={handlePlaceOrder}
+                style={{
+                  backgroundColor: 'orange',
+                  paddingVertical: 10,
+                  paddingHorizontal: 20,
+                  // borderWidth: 1,
+                  borderRadius: 50,
+                  alignItems: 'center',
+                  marginVertical: 10,
+                }}
+              >
+                <Text
+                  style={{ fontWeight: 'bold', fontSize: 18, color: 'white' }}
+                >
+                  Place your order
+                </Text>
+              </Pressable>
+            </View>
           </View>
         )}
       </ScrollView>

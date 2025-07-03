@@ -1,7 +1,9 @@
 import express from 'express';
 import {
   AddAddress,
+  createOrder,
   getAddress,
+  getUserProfile,
   Login,
   Register,
   VerifyEmailVerificationToken,
@@ -14,5 +16,7 @@ router.post('/login', Login);
 router.get('/verify/:token', VerifyEmailVerificationToken);
 router.post('/address', AddAddress);
 router.get('/address/:userId', getAddress);
+router.get('/user/:userId', getUserProfile);
+router.post('/order', createOrder);
 
 export default router;

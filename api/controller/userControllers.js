@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 
 import sendVerificationEmail from '../utils/sendEmailVerificationOTP.js';
+import Order from '../model/order.js';
 
 export const Register = async (req, res) => {
   try {
@@ -131,6 +132,102 @@ export const getAddress = async (req, res) => {
     return res.status(200).json({ address, message: 'Success' });
   } catch (error) {
     console.log('Error in get Address', error);
+    return res
+      .status(500)
+      .json({ message: 'Internal server error ', error: error });
+  }
+};
+
+export const createOrder = async (req, res) => {
+  try {
+    const { userId, cartItem, paymentMethod, shippingAddress, totalPrice } =
+      req.body;
+
+    if (!userId || !cartItem || !shippingAddress || !totalPrice) {
+      return res.status(400).json({
+        message: 'All fields are required.',
+        requiredFields: ['userId', 'cartItem', 'shippingAddress', 'totalPrice'],
+      });
+    }
+
+    if (!Array.isArray(cartItem) || cartItem.length === 0) {
+      return res.status(400).json({ message: 'Cart cannot be empty.' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    const products = cartItem.map(item => ({
+      name: item?.title,
+      image: item.image,
+      quantity: item.quantity,
+      price: item?.price,
+    }));
+
+    const newOrder = new Order({
+      user: userId,
+      products,
+      shippingAddress,
+      totalPrice,
+      paymentMethod,
+    });
+
+    await newOrder.save();
+
+    user.orders.push(newOrder._id);
+    await user.save();
+
+    return res.status(200).json({ message: 'Order created successfully.' });
+  } catch (error) {
+    console.error('Error creating order:', error);
+    return res
+      .status(500)
+      .json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'Userid is required' });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User Not found' });
+    }
+
+    return res.status(200).json({ user: user });
+  } catch (error) {
+    console.log('Error in  getUserProfile:', error);
+    return res
+      .status(500)
+      .json({ message: 'Internal server error ', error: error });
+  }
+};
+
+export const getOrderDetails = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'Userid is required' });
+    }
+
+    const user = await User.findById(userId).populate('orders');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User Not found' });
+    }
+
+    return res.status(200).json({ orders: user.orders });
+  } catch (error) {
+    console.log('Error in  getOrderDetails:', error);
     return res
       .status(500)
       .json({ message: 'Internal server error ', error: error });

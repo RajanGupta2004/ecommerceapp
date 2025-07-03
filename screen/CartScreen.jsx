@@ -18,9 +18,12 @@ import {
   incrementQuantity,
   removeFromCart,
 } from '../redux/cartReducer';
+import { useNavigation } from '@react-navigation/native';
 
 const CartScreen = () => {
   const cart = useSelector(state => state.cart.cart);
+
+  const navigation = useNavigation();
   const total = cart
     ?.map(item => item.price * item.quantity)
     .reduce((curr, prev) => curr + prev, 0);
@@ -87,6 +90,7 @@ const CartScreen = () => {
           </View>
           <Text>EMI Details available</Text>
           <Pressable
+            onPress={() => navigation.navigate('Confirm')}
             style={{
               backgroundColor: 'orange',
               paddingVertical: 10,

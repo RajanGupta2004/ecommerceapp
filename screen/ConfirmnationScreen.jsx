@@ -17,7 +17,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { cleanCart } from '../redux/cartReducer';
-
+import RazorpayCheckout from 'react-native-razorpay';
 const ConfirmnationScreen = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [addresses, setAddresses] = useState([]);
@@ -39,7 +39,6 @@ const ConfirmnationScreen = () => {
   ];
   const handlePlaceOrder = async () => {
     try {
-      Alert.alert('Button clicked');
       const data = {
         userId,
         shippingAddress: selectedAddress,
@@ -80,6 +79,51 @@ const ConfirmnationScreen = () => {
   }, []);
 
   console.log('Confirm Address', addresses);
+
+  const pay = async () => {
+    try {
+      const options = {
+        description: 'Credits towards consultation',
+        image: 'https://i.imgur.com/3g7nmJC.png',
+        currency: 'INR',
+        key: '', // Your api key
+        amount: '5000',
+        name: 'foo',
+        prefill: {
+          email: 'void@razorpay.com',
+          contact: '9191919191',
+          name: 'Razorpay Software',
+        },
+        theme: { color: '#F37254' },
+      };
+
+      const razorpayData = await RazorpayCheckout.open(options);
+
+      console.log('razor pay data', razorpayData);
+
+      const data = {
+        userId,
+        shippingAddress: selectedAddress,
+        paymentMethod: selectedOptions,
+        totalPrice: total,
+        cartItem: cart,
+      };
+
+      const res = await axios.post(
+        'http://192.168.224.29:8000/api/v1/order',
+        data,
+      );
+
+      if (res.status === 200) {
+        navigation.navigate('Order');
+        dispatch(cleanCart());
+      } else {
+        console.log('Error while creating order');
+      }
+    } catch (error) {
+      console.log('Error while creating the razor pay', error);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -395,7 +439,19 @@ const ConfirmnationScreen = () => {
                     name="circle-o"
                     size={24}
                     color="green"
-                    onPress={() => setSelectedOptions('Card')}
+                    onPress={() => {
+                      setSelectedOptions('Card');
+                      Alert.alert('UPI/Debit card', 'Pay Online', [
+                        {
+                          text: 'Cancel',
+                          onPress: () => console.log('Cancel is pressed'),
+                        },
+                        {
+                          text: 'OK',
+                          onPress: () => pay(),
+                        },
+                      ]);
+                    }}
                   />
                 )}
                 <Text style={{ fontWeight: '500' }}>

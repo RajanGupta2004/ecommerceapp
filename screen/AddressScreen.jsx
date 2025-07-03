@@ -48,10 +48,13 @@ const AddressScreen = () => {
         landMark,
         postalCode,
       };
-      const res = await axios.post('http://192.168.12.29:8000/api/v1/address', {
-        userId,
-        address,
-      });
+      const res = await axios.post(
+        'http://192.168.169.29:8000/api/v1/address',
+        {
+          userId,
+          address,
+        },
+      );
 
       setName('');
       setMobileNo('');

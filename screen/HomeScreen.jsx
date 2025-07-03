@@ -206,6 +206,7 @@ const HomeScreen = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCategoryLabel, setSelectedCategoryLabel] =
@@ -217,7 +218,7 @@ const HomeScreen = () => {
   const { userId, setUserId } = useContext(UserType);
 
   // const cart = useSelector(state => state.cart.cart);
-  console.log('userId from Home', userId);
+  console.log('selectedAddress Home', selectedAddress);
 
   const categories = [
     { label: 'All Categories', value: 'all' },
@@ -270,7 +271,7 @@ const HomeScreen = () => {
       try {
         if (userId) {
           const res = await axios.get(
-            `http://192.168.12.29:8000/api/v1/address/${userId}`,
+            `http://192.168.169.29:8000/api/v1/address/${userId}`,
           );
           console.log('Address', res.data?.address);
           setAddresses(res.data?.address);
@@ -340,11 +341,20 @@ const HomeScreen = () => {
             }}
           >
             <Entypo style={{ paddingLeft: 10 }} name="location-pin" size={30} />
-            <Pressable onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={{ fontSize: 13, fontWeight: '500' }}>
-                Delivered here Rajan - Mumbai 400076
-              </Text>
-            </Pressable>
+            {selectedAddress ? (
+              <Pressable onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={{ fontSize: 13, fontWeight: '500' }}>
+                  Delivered here {selectedAddress?.name} - Mumbai{' '}
+                  {selectedAddress?.postalCode}
+                </Text>
+              </Pressable>
+            ) : (
+              <Pressable onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={{ fontSize: 13, fontWeight: '500' }}>
+                  Add Deliverey Address here
+                </Text>
+              </Pressable>
+            )}
 
             <Entypo style={{ paddingLeft: 10 }} name="chevron-down" size={30} />
           </View>
@@ -606,6 +616,9 @@ const HomeScreen = () => {
 
             {addresses?.map((item, index) => (
               <Pressable
+                onPress={() => {
+                  setSelectedAddress(item);
+                }}
                 key={index}
                 style={{
                   borderWidth: 0.6,
@@ -614,6 +627,8 @@ const HomeScreen = () => {
                   borderRadius: 10,
                   marginVertical: 10,
                   marginHorizontal: 10,
+                  backgroundColor:
+                    selectedAddress._id == item._id ? 'pink' : '',
                 }}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>

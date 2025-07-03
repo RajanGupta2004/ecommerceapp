@@ -24,6 +24,7 @@ export const cartSlice = createSlice({
 
     incrementQuantity: (state, action) => {
       const itemPresent = state.cart.find(item => item.id == action.payload.id);
+
       itemPresent.quantity++;
     },
 

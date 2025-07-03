@@ -13,6 +13,7 @@ import ProfileScreen from '../screen/ProfileScreen';
 import ProductInfoScreen from '../screen/ProductInfoScreen';
 import AddAddressScreen from '../screen/AddAddressScreen';
 import AddressScreen from '../screen/AddressScreen';
+import CartScreen from '../screen/CartScreen';
 
 const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -54,9 +55,9 @@ const StackNavigation = () => {
         />
         <Tab.Screen
           name="Cart"
-          component={ProfileScreen}
+          component={CartScreen}
           options={{
-            tabBarLabel: 'Profile',
+            tabBarLabel: 'cart',
             headerShown: false,
             tabBarIcon: ({ focused }) => {
               return focused ? (

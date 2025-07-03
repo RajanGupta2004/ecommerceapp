@@ -13,14 +13,11 @@ const AddAddressScreen = () => {
 
   const { userId } = useContext(UserType);
 
-  console.log('Address userId', userId);
-  console.log('addresses', addresses);
-
   useEffect(() => {
     const fetchUserAddress = async () => {
       try {
         const res = await axios.get(
-          `http://192.168.12.29:8000/api/v1/address/${userId}`,
+          `http://192.168.169.29:8000/api/v1/address/${userId}`,
         );
         console.log('Address', res.data?.address);
         setAddresses(res.data?.address);

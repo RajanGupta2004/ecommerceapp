@@ -8,6 +8,7 @@ import {
   Platform,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,13 +20,20 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkLoginStatus = async () => {
-      const token = await AsyncStorage.getItem('authToken');
-
-      if (token) {
-        navigation.replace('Main');
+      setLoading(true); // Show loader while checking
+      try {
+        const token = await AsyncStorage.getItem('authToken');
+        if (token) {
+          navigation.replace('Main');
+        }
+      } catch (error) {
+        console.log('Error checking login status', error);
+      } finally {
+        setLoading(false); // Stop loader
       }
     };
 
@@ -60,6 +68,21 @@ const LoginScreen = () => {
       Alert.alert('Error in Login ');
     }
   };
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <ActivityIndicator size={40} />
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={styles.container}>
       <Image

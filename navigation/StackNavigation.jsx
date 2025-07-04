@@ -45,7 +45,7 @@ const StackNavigation = () => {
           component={ProfileScreen}
           options={{
             tabBarLabel: 'Profile',
-            headerShown: false,
+            // headerShown: false,
             tabBarIcon: ({ focused }) => {
               return focused ? (
                 <Ionicons name="person" size={30} color="black" />

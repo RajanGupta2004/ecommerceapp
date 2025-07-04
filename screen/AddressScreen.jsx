@@ -49,7 +49,7 @@ const AddressScreen = () => {
         postalCode,
       };
       const res = await axios.post(
-        'http://192.168.169.29:8000/api/v1/address',
+        'https://ecommerceapp-zz23.onrender.com/api/v1/address',
         {
           userId,
           address,

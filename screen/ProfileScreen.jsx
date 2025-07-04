@@ -75,7 +75,7 @@ const ProfileScreen = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.224.29:8000/api/v1/order/${userId}`,
+          `https://ecommerceapp-zz23.onrender.com/api/v1/order/${userId}`,
         );
         const orders = response.data.orders;
         setOrders(orders);

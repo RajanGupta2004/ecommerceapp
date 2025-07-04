@@ -271,7 +271,7 @@ const HomeScreen = () => {
       try {
         if (userId) {
           const res = await axios.get(
-            `http://192.168.169.29:8000/api/v1/address/${userId}`,
+            `https://ecommerceapp-zz23.onrender.com/api/v1/address/${userId}`,
           );
           console.log('Address', res.data?.address);
           setAddresses(res.data?.address);
@@ -391,7 +391,7 @@ const HomeScreen = () => {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            style={{ backgroundColor: 'red', width: '100%', height: 250 }}
+            style={{ width: '100%', height: 250 }}
           >
             {images.map((img, index) => (
               <Image

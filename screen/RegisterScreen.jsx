@@ -31,7 +31,7 @@ const RegisterScreen = () => {
       };
 
       const res = await axios.post(
-        'http://192.168.81.29:8000/api/v1/register',
+        'https://ecommerceapp-zz23.onrender.com/api/v1/register',
         user,
       );
       setName('');

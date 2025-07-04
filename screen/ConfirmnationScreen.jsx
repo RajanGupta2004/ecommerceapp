@@ -48,7 +48,7 @@ const ConfirmnationScreen = () => {
       };
 
       const res = await axios.post(
-        'http://192.168.224.29:8000/api/v1/order',
+        'https://ecommerceapp-zz23.onrender.com/api/v1/order',
         data,
       );
 
@@ -66,7 +66,7 @@ const ConfirmnationScreen = () => {
     const fetchUserAddress = async () => {
       try {
         const res = await axios.get(
-          `http://192.168.224.29:8000/api/v1/address/${userId}`,
+          `https://ecommerceapp-zz23.onrender.com/api/v1/address/${userId}`,
         );
         console.log('Address', res.data?.address);
         setAddresses(res.data?.address);
@@ -110,7 +110,7 @@ const ConfirmnationScreen = () => {
       };
 
       const res = await axios.post(
-        'http://192.168.224.29:8000/api/v1/order',
+        'https://ecommerceapp-zz23.onrender.com/api/v1/order',
         data,
       );
 

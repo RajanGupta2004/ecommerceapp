@@ -86,8 +86,8 @@ const ConfirmnationScreen = () => {
         description: 'Credits towards consultation',
         image: 'https://i.imgur.com/3g7nmJC.png',
         currency: 'INR',
-        key: '', // Your api key
-        amount: '5000',
+        key: 'rzp_test_asWK63ZGvG6Nok', // Your api key
+        amount: total * 100,
         name: 'foo',
         prefill: {
           email: 'void@razorpay.com',
@@ -104,7 +104,7 @@ const ConfirmnationScreen = () => {
       const data = {
         userId,
         shippingAddress: selectedAddress,
-        paymentMethod: selectedOptions,
+        paymentMethod: 'Card',
         totalPrice: total,
         cartItem: cart,
       };

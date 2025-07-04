@@ -17,7 +17,7 @@ const AddAddressScreen = () => {
     const fetchUserAddress = async () => {
       try {
         const res = await axios.get(
-          `http://192.168.169.29:8000/api/v1/address/${userId}`,
+          `http://192.168.224.29:8000/api/v1/address/${userId}`,
         );
         console.log('Address', res.data?.address);
         setAddresses(res.data?.address);

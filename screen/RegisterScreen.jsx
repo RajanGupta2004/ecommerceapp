@@ -42,7 +42,7 @@ const RegisterScreen = () => {
       Alert.alert('Registration successfully....');
     } catch (error) {
       console.log('Error while regidtration', error);
-      Alert.alert('Error occur while usr Registration');
+      Alert.alert('Error occur while usr Registration', error);
     }
   };
 

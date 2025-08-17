@@ -48,7 +48,7 @@ const LoginScreen = () => {
       };
 
       const res = await axios.post(
-        'http://https://ecommerceapp-zz23.onrender.com/api/v1/login',
+        'https://ecommerceapp-zz23.onrender.com/api/v1/login',
         user,
       );
       const token = res.data?.token;
@@ -62,7 +62,7 @@ const LoginScreen = () => {
 
       Alert.alert('Login successfulll....');
       console.log('Login successfull...');
-      navigation.replace('Home');
+      navigation.replace('Main');
     } catch (error) {
       console.log('Error in login', error);
       Alert.alert('Error in Login ');

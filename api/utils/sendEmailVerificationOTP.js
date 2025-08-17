@@ -5,7 +5,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
     from: process.env.EMAIL_FROM,
     to: email,
     subject: 'Emai verification Token...',
-    text: `Please click the following link to verify your email: http://localhost:8000/api/v1/verify/${verificationToken}`,
+    text: `Please click the following link to verify your email: http://ecommerceapp-zz23.onrender.com/api/v1/verify/${verificationToken}`,
   };
 
   transporter.sendMail(mailOptions, function (error, info) {

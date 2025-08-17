@@ -234,6 +234,7 @@ const HomeScreen = () => {
       try {
         const res = await axios.get('https://fakestoreapi.com/products');
         setProducts(res.data);
+
         setFilteredProducts(res.data); // Initially show all products
       } catch (error) {
         console.log('Error fetch products:', error);
